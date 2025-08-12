@@ -7,7 +7,7 @@
 //! use graphina::approximation::algorithms::*;
 //! ```
 
-use crate::core::exceptions::GraphinaException;
+use crate::core::error::GraphinaError;
 use crate::core::paths::dijkstra;
 use crate::core::types::{BaseGraph, GraphConstructor, NodeId};
 use ordered_float::OrderedFloat;
@@ -269,9 +269,7 @@ where
 
 /// -------------------------------
 /// Compute a lower bound on the diameter using BFS from an arbitrary node.
-pub fn diameter<A, Ty>(
-    graph: &BaseGraph<A, OrderedFloat<f64>, Ty>,
-) -> Result<f64, GraphinaException>
+pub fn diameter<A, Ty>(graph: &BaseGraph<A, OrderedFloat<f64>, Ty>) -> Result<f64, GraphinaError>
 where
     Ty: GraphConstructor<A, OrderedFloat<f64>>,
 {
@@ -365,7 +363,7 @@ where
 /// Approximate a solution to the TSP using Christofides' algorithm (placeholder).
 pub fn christofides<A, Ty>(
     graph: &BaseGraph<A, f64, Ty>,
-) -> Result<(Vec<NodeId>, f64), GraphinaException>
+) -> Result<(Vec<NodeId>, f64), GraphinaError>
 where
     A: Clone,
     Ty: GraphConstructor<A, f64> + GraphConstructor<A, OrderedFloat<f64>>,
@@ -374,7 +372,7 @@ where
         .nodes()
         .next()
         .map(|(u, _)| u)
-        .ok_or_else(|| GraphinaException::new("Cannot run TSP on an empty graph."))?;
+        .ok_or_else(|| GraphinaError::empty_graph("Cannot run TSP on an empty graph."))?;
     greedy_tsp(&graph.convert::<OrderedFloat<f64>>(), start_node)
 }
 
@@ -382,7 +380,7 @@ where
 /// Approximate the TSP solution using a greedy algorithm.
 pub fn traveling_salesman_problem<A, Ty>(
     graph: &BaseGraph<A, f64, Ty>,
-) -> Result<(Vec<NodeId>, f64), GraphinaException>
+) -> Result<(Vec<NodeId>, f64), GraphinaError>
 where
     A: Clone,
     Ty: GraphConstructor<A, f64> + GraphConstructor<A, OrderedFloat<f64>>,
@@ -391,7 +389,7 @@ where
         .nodes()
         .next()
         .map(|(u, _)| u)
-        .ok_or_else(|| GraphinaException::new("Cannot run TSP on an empty graph."))?;
+        .ok_or_else(|| GraphinaError::empty_graph("Cannot run TSP on an empty graph."))?;
     greedy_tsp(&graph.convert::<OrderedFloat<f64>>(), start_node)
 }
 
@@ -401,7 +399,7 @@ where
 pub fn greedy_tsp<A, Ty>(
     graph: &BaseGraph<A, OrderedFloat<f64>, Ty>,
     source: NodeId,
-) -> Result<(Vec<NodeId>, f64), GraphinaException>
+) -> Result<(Vec<NodeId>, f64), GraphinaError>
 where
     Ty: GraphConstructor<A, OrderedFloat<f64>>,
 {
@@ -418,7 +416,7 @@ where
             .filter_map(|v| distances[v.index()].map(|d| (*v, d.0)))
             .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal))
             .ok_or_else(|| {
-                GraphinaException::new("Could not find a path to any unvisited node.")
+                GraphinaError::no_path("Could not find a path to any unvisited node.")
             })?;
         tour.push(next_node);
         cost += next_cost;
@@ -438,7 +436,7 @@ where
 pub fn simulated_annealing_tsp<A, Ty>(
     graph: &BaseGraph<A, f64, Ty>,
     init_cycle: Vec<NodeId>,
-) -> Result<(Vec<NodeId>, f64), GraphinaException>
+) -> Result<(Vec<NodeId>, f64), GraphinaError>
 where
     A: Clone,
     Ty: GraphConstructor<A, f64> + GraphConstructor<A, OrderedFloat<f64>>,
@@ -452,7 +450,7 @@ where
 pub fn threshold_accepting_tsp<A, Ty>(
     graph: &BaseGraph<A, f64, Ty>,
     init_cycle: Vec<NodeId>,
-) -> Result<(Vec<NodeId>, f64), GraphinaException>
+) -> Result<(Vec<NodeId>, f64), GraphinaError>
 where
     A: Clone,
     Ty: GraphConstructor<A, f64> + GraphConstructor<A, OrderedFloat<f64>>,
@@ -475,7 +473,7 @@ where
 fn tour_cost<A, Ty>(
     graph: &BaseGraph<A, OrderedFloat<f64>, Ty>,
     tour: &[NodeId],
-) -> Result<f64, GraphinaException>
+) -> Result<f64, GraphinaError>
 where
     Ty: GraphConstructor<A, OrderedFloat<f64>>,
 {

@@ -1,4 +1,4 @@
-pub mod exceptions;
+pub mod error;
 pub mod generators;
 pub mod io;
 pub mod mst;

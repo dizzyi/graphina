@@ -18,7 +18,7 @@ Generating an Erdős–Rényi graph:
 ```rust
 use graphina::core::generators::erdos_renyi_graph;
 use graphina::core::types::DigraphMarker;
-use graphina::core::exceptions::GraphinaException;
+use graphina::core::exceptions::GraphinaError;
 
 let graph = erdos_renyi_graph::<DigraphMarker>(100, 0.1, 42)
     .expect("Failed to generate Erdős–Rényi graph");
@@ -29,14 +29,14 @@ Generating a Watts–Strogatz graph:
 ```rust
 use graphina::core::generators::watts_strogatz_graph;
 use graphina::core::types::GraphMarker;
-use graphina::core::exceptions::GraphinaException;
+use graphina::core::exceptions::GraphinaError;
 
 let ws = watts_strogatz_graph::<GraphMarker>(100, 6, 0.3, 42)
     .expect("Failed to generate Watts–Strogatz graph");
 ```
 */
 
-use crate::core::exceptions::GraphinaException;
+use crate::core::error::GraphinaError;
 use crate::core::types::{BaseGraph, GraphConstructor};
 use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
@@ -55,19 +55,19 @@ use rand::{Rng, SeedableRng};
 ///
 /// # Returns
 ///
-/// * `Result<BaseGraph<u32, f32, Ty>, GraphinaException>` - The generated graph, or an error if parameters are invalid.
+/// * `Result<BaseGraph<u32, f32, Ty>, GraphinaError>` - The generated graph, or an error if parameters are invalid.
 pub fn erdos_renyi_graph<Ty: GraphConstructor<u32, f32>>(
     n: usize,
     p: f64,
     seed: u64,
-) -> Result<BaseGraph<u32, f32, Ty>, GraphinaException> {
+) -> Result<BaseGraph<u32, f32, Ty>, GraphinaError> {
     if n == 0 {
-        return Err(GraphinaException::new(
+        return Err(GraphinaError::algorithm_error(
             "Number of nodes must be greater than zero.",
         ));
     }
     if !(0.0..=1.0).contains(&p) {
-        return Err(GraphinaException::new(
+        return Err(GraphinaError::algorithm_error(
             "Probability p must be in the range [0.0, 1.0].",
         ));
     }
@@ -110,12 +110,12 @@ pub fn erdos_renyi_graph<Ty: GraphConstructor<u32, f32>>(
 ///
 /// # Returns
 ///
-/// * `Result<BaseGraph<u32, f32, Ty>, GraphinaException>` - The complete graph.
+/// * `Result<BaseGraph<u32, f32, Ty>, GraphinaError>` - The complete graph.
 pub fn complete_graph<Ty: GraphConstructor<u32, f32>>(
     n: usize,
-) -> Result<BaseGraph<u32, f32, Ty>, GraphinaException> {
+) -> Result<BaseGraph<u32, f32, Ty>, GraphinaError> {
     if n == 0 {
-        return Err(GraphinaException::new(
+        return Err(GraphinaError::algorithm_error(
             "Number of nodes must be greater than zero.",
         ));
     }
@@ -157,20 +157,20 @@ pub fn complete_graph<Ty: GraphConstructor<u32, f32>>(
 ///
 /// # Returns
 ///
-/// * `Result<BaseGraph<u32, f32, Ty>, GraphinaException>` - The generated bipartite graph.
+/// * `Result<BaseGraph<u32, f32, Ty>, GraphinaError>` - The generated bipartite graph.
 pub fn bipartite_graph<Ty: GraphConstructor<u32, f32>>(
     n1: usize,
     n2: usize,
     p: f64,
     seed: u64,
-) -> Result<BaseGraph<u32, f32, Ty>, GraphinaException> {
+) -> Result<BaseGraph<u32, f32, Ty>, GraphinaError> {
     if n1 == 0 || n2 == 0 {
-        return Err(GraphinaException::new(
+        return Err(GraphinaError::algorithm_error(
             "Both partitions must have at least one node.",
         ));
     }
     if !(0.0..=1.0).contains(&p) {
-        return Err(GraphinaException::new(
+        return Err(GraphinaError::algorithm_error(
             "Probability p must be in the range [0.0, 1.0].",
         ));
     }
@@ -206,13 +206,13 @@ pub fn bipartite_graph<Ty: GraphConstructor<u32, f32>>(
 ///
 /// # Returns
 ///
-/// * `Result<BaseGraph<u32, f32, Ty>, GraphinaException>` - The generated star graph.
+/// * `Result<BaseGraph<u32, f32, Ty>, GraphinaError>` - The generated star graph.
 pub fn star_graph<Ty: GraphConstructor<u32, f32>>(
     n: usize,
-) -> Result<BaseGraph<u32, f32, Ty>, GraphinaException> {
+) -> Result<BaseGraph<u32, f32, Ty>, GraphinaError> {
     let mut graph = BaseGraph::<u32, f32, Ty>::new();
     if n == 0 {
-        return Err(GraphinaException::new(
+        return Err(GraphinaError::algorithm_error(
             "Star graph must have at least one node.",
         ));
     }
@@ -236,13 +236,13 @@ pub fn star_graph<Ty: GraphConstructor<u32, f32>>(
 ///
 /// # Returns
 ///
-/// * `Result<BaseGraph<u32, f32, Ty>, GraphinaException>` - The generated cycle graph.
+/// * `Result<BaseGraph<u32, f32, Ty>, GraphinaError>` - The generated cycle graph.
 pub fn cycle_graph<Ty: GraphConstructor<u32, f32>>(
     n: usize,
-) -> Result<BaseGraph<u32, f32, Ty>, GraphinaException> {
+) -> Result<BaseGraph<u32, f32, Ty>, GraphinaError> {
     let mut graph = BaseGraph::<u32, f32, Ty>::new();
     if n == 0 {
-        return Err(GraphinaException::new(
+        return Err(GraphinaError::algorithm_error(
             "Cycle graph must have at least one node.",
         ));
     }
@@ -272,7 +272,7 @@ pub fn cycle_graph<Ty: GraphConstructor<u32, f32>>(
 ///
 /// # Returns
 ///
-/// * `Result<BaseGraph<u32, f32, Ty>, GraphinaException>` - The generated Watts–Strogatz graph.
+/// * `Result<BaseGraph<u32, f32, Ty>, GraphinaError>` - The generated Watts–Strogatz graph.
 ///
 /// # Notes
 ///
@@ -284,17 +284,19 @@ pub fn watts_strogatz_graph<Ty: GraphConstructor<u32, f32>>(
     k: usize,
     beta: f64,
     seed: u64,
-) -> Result<BaseGraph<u32, f32, Ty>, GraphinaException> {
+) -> Result<BaseGraph<u32, f32, Ty>, GraphinaError> {
     if n == 0 {
-        return Err(GraphinaException::new(
+        return Err(GraphinaError::algorithm_error(
             "Number of nodes must be greater than zero.",
         ));
     }
     if k % 2 != 0 || k >= n {
-        return Err(GraphinaException::new("k must be even and less than n."));
+        return Err(GraphinaError::algorithm_error(
+            "k must be even and less than n.",
+        ));
     }
     if !(0.0..=1.0).contains(&beta) {
-        return Err(GraphinaException::new(
+        return Err(GraphinaError::algorithm_error(
             "Beta must be in the range [0.0, 1.0].",
         ));
     }
@@ -351,7 +353,7 @@ pub fn watts_strogatz_graph<Ty: GraphConstructor<u32, f32>>(
 ///
 /// # Returns
 ///
-/// * `Result<BaseGraph<u32, f32, Ty>, GraphinaException>` - The generated Barabási–Albert graph.
+/// * `Result<BaseGraph<u32, f32, Ty>, GraphinaError>` - The generated Barabási–Albert graph.
 ///
 /// # Notes
 ///
@@ -362,9 +364,9 @@ pub fn barabasi_albert_graph<Ty: GraphConstructor<u32, f32>>(
     n: usize,
     m: usize,
     seed: u64,
-) -> Result<BaseGraph<u32, f32, Ty>, GraphinaException> {
+) -> Result<BaseGraph<u32, f32, Ty>, GraphinaError> {
     if m == 0 || n < m {
-        return Err(GraphinaException::new(
+        return Err(GraphinaError::algorithm_error(
             "n must be at least m and m must be > 0.",
         ));
     }

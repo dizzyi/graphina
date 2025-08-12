@@ -15,7 +15,7 @@
 
 use petgraph::graph::NodeIndex;
 
-use crate::core::exceptions::GraphinaException;
+use crate::core::error::GraphinaError;
 use crate::core::paths::{dijkstra, dijkstra_path_impl};
 use crate::core::types::{BaseGraph, GraphConstructor, GraphinaGraph, NodeId};
 use std::collections::{HashMap, VecDeque};
@@ -629,7 +629,7 @@ pub fn closeness_centrality_impl<A, W, Ty>(
     graph: &BaseGraph<A, W, Ty>,
     eval_cost: impl Fn(&W) -> Option<f64>,
     wf_improved: bool,
-) -> Result<Vec<f64>, GraphinaException>
+) -> Result<Vec<f64>, GraphinaError>
 where
     A: Debug,
     W: Debug,
@@ -686,7 +686,7 @@ where
 pub fn closeness_centrality<A, Ty>(
     graph: &BaseGraph<A, f64, Ty>,
     wf_improved: bool,
-) -> Result<Vec<f64>, GraphinaException>
+) -> Result<Vec<f64>, GraphinaError>
 where
     A: Debug,
     Ty: GraphConstructor<A, f64>,
@@ -872,7 +872,7 @@ where
 /// Harmonic centrality: sum of reciprocals of shortest-path distances (ignoring unreachable nodes).
 pub fn harmonic_centrality<A, Ty>(
     graph: &BaseGraph<A, ordered_float::OrderedFloat<f64>, Ty>,
-) -> Result<Vec<f64>, GraphinaException>
+) -> Result<Vec<f64>, GraphinaError>
 where
     Ty: GraphConstructor<A, ordered_float::OrderedFloat<f64>>,
 {

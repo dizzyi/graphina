@@ -34,7 +34,7 @@ use sprs::{CsMat, TriMat};
 use std::collections::HashMap;
 
 // Import exceptions from the core exceptions module.
-use crate::core::exceptions::{GraphinaException, NodeNotFound};
+use crate::core::error::GraphinaError;
 
 /// Marker type for directed graphs.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -192,12 +192,14 @@ impl<A, W, Ty: GraphConstructor<A, W> + EdgeType> BaseGraph<A, W, Ty> {
     /// # Errors
     ///
     /// Returns an error if the node does not exist (has been removed).
-    pub fn try_update_node(&mut self, node: NodeId, new_attr: A) -> Result<(), NodeNotFound> {
+    pub fn try_update_node(&mut self, node: NodeId, new_attr: A) -> Result<(), GraphinaError> {
         if let Some(attr) = self.inner.node_weight_mut(node.0) {
             *attr = new_attr;
             Ok(())
         } else {
-            Err(NodeNotFound::new("Node not found during update"))
+            Err(GraphinaError::node_not_found(
+                "Node not found during update",
+            ))
         }
     }
 
@@ -215,10 +217,10 @@ impl<A, W, Ty: GraphConstructor<A, W> + EdgeType> BaseGraph<A, W, Ty> {
     /// Attempts to remove a node from the graph.
     ///
     /// Returns the node's attribute if successful, or a `NodeNotFound` error if the node did not exist.
-    pub fn try_remove_node(&mut self, node: NodeId) -> Result<A, NodeNotFound> {
+    pub fn try_remove_node(&mut self, node: NodeId) -> Result<A, GraphinaError> {
         self.inner
             .remove_node(node.0)
-            .ok_or_else(|| NodeNotFound::new("Node not found during removal"))
+            .ok_or_else(|| GraphinaError::node_not_found("Node not found during removal"))
     }
 
     /// Removes an edge from the graph, returning its weight if it existed.
@@ -228,11 +230,11 @@ impl<A, W, Ty: GraphConstructor<A, W> + EdgeType> BaseGraph<A, W, Ty> {
 
     /// Attempts to remove an edge from the graph.
     ///
-    /// Returns the edge's weight if successful, or a `GraphinaException` if the edge was not found.
-    pub fn try_remove_edge(&mut self, edge: EdgeId) -> Result<W, GraphinaException> {
+    /// Returns the edge's weight if successful, or a `GraphinaError` if the edge was not found.
+    pub fn try_remove_edge(&mut self, edge: EdgeId) -> Result<W, GraphinaError> {
         self.inner
             .remove_edge(edge.0)
-            .ok_or_else(|| GraphinaException::new("Edge not found during removal"))
+            .ok_or_else(|| GraphinaError::edge_not_found("Edge not found during removal"))
     }
 
     /// Returns the number of nodes in the graph.

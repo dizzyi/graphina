@@ -26,12 +26,12 @@ It supports single‑source and all‑pairs computations via (classical) algorit
 ## Error Handling
 
 Preconditions for each algorithm are enforced at runtime using custom exceptions from `graphina::core::exceptions`.
-For example, algorithms that require nonnegative edge weights will return a `Result` containing a `GraphinaException`
+For example, algorithms that require nonnegative edge weights will return a `Result` containing a `GraphinaError`
 if a negative weight is encountered. Users should handle these `Result` types accordingly.
 
 */
 
-use crate::core::exceptions::GraphinaException;
+use crate::core::error::GraphinaError;
 use crate::core::types::{BaseGraph, GraphConstructor, GraphinaGraph, NodeId};
 use std::cmp::Reverse;
 use std::collections::{BinaryHeap, HashSet};
@@ -147,7 +147,7 @@ pub fn dijkstra_path_impl<A, W, Ty>(
     source: NodeId,
     cutoff: Option<f64>,
     eval_cost: impl Fn(&W) -> Option<f64>,
-) -> Result<PathFindResult, GraphinaException>
+) -> Result<PathFindResult, GraphinaError>
 where
     W: Debug,
     A: Debug,
@@ -174,13 +174,13 @@ where
                 continue;
             };
             if w.is_sign_negative() {
-                return Err(GraphinaException::new(&format!(
+                return Err(GraphinaError::algorithm_error(format!(
                     "Dijkstra requires nonnegative costs, but found cost: {:?}, src: {:?}, dst: {:?}, edge: {:?}",
                     w, u, v, edge
                 )));
             }
             let Ok(w) = NotNan::new(w) else {
-                return Err(GraphinaException::new(&format!(
+                return Err(GraphinaError::algorithm_error(format!(
                     "Dijkstra requires not NaN costs, but found cost: {:?}, src: {:?}, dst: {:?}, edge: {:?}",
                     w, u, v, edge
                 )));
@@ -245,7 +245,7 @@ pub fn dijkstra_path_f64<A, Ty>(
     graph: &BaseGraph<A, f64, Ty>,
     source: NodeId,
     cutoff: Option<f64>,
-) -> Result<PathFindResult, GraphinaException>
+) -> Result<PathFindResult, GraphinaError>
 where
     A: Debug,
     Ty: GraphConstructor<A, f64>,
@@ -262,7 +262,7 @@ where
 /// - `Some(cost)` if the node is reachable from the source, or
 /// - `None` if it is unreachable.
 ///
-/// Returns an `Err(GraphinaException)` if a negative edge weight is found.
+/// Returns an `Err(GraphinaError)` if a negative edge weight is found.
 ///
 /// # Complexity
 ///
@@ -271,7 +271,7 @@ where
 pub fn dijkstra<A, W, Ty>(
     graph: &BaseGraph<A, W, Ty>,
     source: NodeId,
-) -> Result<Vec<Option<W>>, GraphinaException>
+) -> Result<Vec<Option<W>>, GraphinaError>
 where
     W: Copy + PartialOrd + Add<Output = W> + Sub<Output = W> + From<u8> + Ord + Debug,
     Ty: GraphConstructor<A, W>,
@@ -292,7 +292,7 @@ where
         }
         for (v, w) in outgoing_edges(graph, u) {
             if w < W::from(0u8) {
-                return Err(GraphinaException::new(&format!(
+                return Err(GraphinaError::algorithm_error(format!(
                     "Dijkstra requires nonnegative weights, but found weight: {:?}",
                     w
                 )));
@@ -368,7 +368,7 @@ where
 /// # Returns
 ///
 /// A `Result` which is `Ok(Some((total_cost, path)))` if a path is found, `Ok(None)` if no path exists,
-/// or an `Err(GraphinaException)` if a negative edge weight is found.
+/// or an `Err(GraphinaError)` if a negative edge weight is found.
 ///
 /// # Complexity
 ///
@@ -379,7 +379,7 @@ pub fn a_star<A, W, Ty, F>(
     source: NodeId,
     target: NodeId,
     heuristic: F,
-) -> Result<Option<(W, Vec<NodeId>)>, GraphinaException>
+) -> Result<Option<(W, Vec<NodeId>)>, GraphinaError>
 where
     W: Copy + PartialOrd + Add<Output = W> + Sub<Output = W> + From<u8> + Ord + Debug,
     Ty: GraphConstructor<A, W>,
@@ -405,7 +405,7 @@ where
         }
         for (v, w) in outgoing_edges(graph, u) {
             if w < W::from(0u8) {
-                return Err(GraphinaException::new(&format!(
+                return Err(GraphinaError::algorithm_error(format!(
                     "A* requires nonnegative weights, but found weight: {:?}",
                     w
                 )));
@@ -426,7 +426,7 @@ where
         while cur != source {
             path.push(cur);
             cur = prev[cur.index()].ok_or_else(|| {
-                GraphinaException::new("Path reconstruction failed unexpectedly.")
+                GraphinaError::algorithm_error("Path reconstruction failed unexpectedly.")
             })?;
         }
         path.push(source);
@@ -585,7 +585,7 @@ where
 /// # Returns
 ///
 /// A `Result` which is `Ok(Some((total_cost, path)))` if a path is found, `Ok(None)` if no path exists,
-/// or an `Err(GraphinaException)` if a negative edge weight is found.
+/// or an `Err(GraphinaError)` if a negative edge weight is found.
 ///
 /// # Complexity
 ///
@@ -596,14 +596,14 @@ pub fn ida_star<A, Ty, F>(
     source: NodeId,
     target: NodeId,
     heuristic: F,
-) -> Result<Option<(f64, Vec<NodeId>)>, GraphinaException>
+) -> Result<Option<(f64, Vec<NodeId>)>, GraphinaError>
 where
     Ty: GraphConstructor<A, f64>,
     F: Fn(NodeId) -> f64,
 {
     for (_u, _v, &w) in graph.edges() {
         if w < 0.0 {
-            return Err(GraphinaException::new(&format!(
+            return Err(GraphinaError::algorithm_error(format!(
                 "IDA* requires nonnegative weights, but found weight: {}",
                 w
             )));

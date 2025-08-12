@@ -13,13 +13,13 @@ Specifically, it supports:
   - Writing a graph's adjacency list to a file.
 
 Functions use the core graph abstractions defined in `graphina::core::types`.
-and use the custom exception `graphina::core::exceptions::GraphinaException` for reporting errors.
+and use the custom exception `graphina::core::exceptions::GraphinaError` for reporting errors.
 
 The input files support comments (lines or inline comments beginning with `#` are ignored)
 and allow for optional weight specifications. If a weight is missing, a default of `1.0` is used.
 */
 
-use crate::core::exceptions::GraphinaException;
+use crate::core::error::GraphinaError;
 use crate::core::types::{BaseGraph, GraphConstructor};
 use std::collections::HashMap;
 use std::fs::File;
@@ -44,7 +44,7 @@ use std::io::{BufRead, BufReader, BufWriter, Error, ErrorKind, Result, Write};
 /// # Returns
 ///
 /// * `Result<()>` - An `io::Result` indicating success or failure. Failure can occur due to I/O errors,
-///   or if any token fails to parse, in which case a `graphina::core::exceptions::GraphinaException`
+///   or if any token fails to parse, in which case a `graphina::core::exceptions::GraphinaError`
 ///   is returned as part of the error message.
 ///
 /// # Example
@@ -81,7 +81,7 @@ where
         let src_val: i32 = tokens[0].parse().map_err(|e| {
             Error::new(
                 ErrorKind::InvalidData,
-                GraphinaException::new(&format!(
+                GraphinaError::parse_error(format!(
                     "Error parsing source value '{}': {}",
                     tokens[0], e
                 )),
@@ -90,7 +90,7 @@ where
         let tgt_val: i32 = tokens[1].parse().map_err(|e| {
             Error::new(
                 ErrorKind::InvalidData,
-                GraphinaException::new(&format!(
+                GraphinaError::parse_error(format!(
                     "Error parsing target value '{}': {}",
                     tokens[1], e
                 )),
@@ -100,7 +100,10 @@ where
             tokens[2].parse().map_err(|e| {
                 Error::new(
                     ErrorKind::InvalidData,
-                    GraphinaException::new(&format!("Error parsing weight '{}': {}", tokens[2], e)),
+                    GraphinaError::parse_error(format!(
+                        "Error parsing weight '{}': {}",
+                        tokens[2], e
+                    )),
                 )
             })?
         } else {
@@ -135,7 +138,7 @@ where
 /// # Returns
 ///
 /// * `Result<()>` - An `io::Result` indicating success or failure. Failure occurs if a node attribute is missing
-///   (triggering a [`GraphinaException`](../exceptions/index.html#graphinaexception)) or if writing to the file fails.
+///   (triggering a [`GraphinaError`](../exceptions/index.html#GraphinaError)) or if writing to the file fails.
 ///
 /// # Example
 ///
@@ -159,7 +162,7 @@ where
         let src_attr = graph.node_attr(src).ok_or_else(|| {
             Error::new(
                 ErrorKind::InvalidData,
-                GraphinaException::new(&format!(
+                GraphinaError::parse_error(format!(
                     "Missing node attribute for source node: {:?}",
                     src
                 )),
@@ -168,7 +171,7 @@ where
         let tgt_attr = graph.node_attr(tgt).ok_or_else(|| {
             Error::new(
                 ErrorKind::InvalidData,
-                GraphinaException::new(&format!(
+                GraphinaError::parse_error(format!(
                     "Missing node attribute for target node: {:?}",
                     tgt
                 )),
@@ -204,7 +207,7 @@ where
 /// # Returns
 ///
 /// * `Result<()>` - An `io::Result` indicating success or failure. Parsing errors are returned if any token
-///   fails to convert to the expected type. In such cases, a [`GraphinaException`](../exceptions/index.html#graphinaexception)
+///   fails to convert to the expected type. In such cases, a [`GraphinaError`](../exceptions/index.html#GraphinaError)
 ///   is used to encapsulate the error.
 ///
 /// # Example
@@ -245,7 +248,7 @@ where
         let src_val: i32 = tokens[0].parse().map_err(|e| {
             Error::new(
                 ErrorKind::InvalidData,
-                GraphinaException::new(&format!(
+                GraphinaError::parse_error(format!(
                     "Error parsing source value '{}': {}",
                     tokens[0], e
                 )),
@@ -260,7 +263,7 @@ where
             let neighbor_val: i32 = tokens[i].parse().map_err(|e| {
                 Error::new(
                     ErrorKind::InvalidData,
-                    GraphinaException::new(&format!(
+                    GraphinaError::parse_error(format!(
                         "Error parsing neighbor value '{}': {}",
                         tokens[i], e
                     )),
@@ -270,7 +273,7 @@ where
                 tokens[i + 1].parse().map_err(|e| {
                     Error::new(
                         ErrorKind::InvalidData,
-                        GraphinaException::new(&format!(
+                        GraphinaError::parse_error(format!(
                             "Error parsing weight '{}': {}",
                             tokens[i + 1],
                             e
@@ -311,7 +314,7 @@ where
 /// # Returns
 ///
 /// * `Result<()>` - An `io::Result` indicating success or failure. An error is returned if any node attribute
-///   is missing (with a [`GraphinaException`](../exceptions/index.html#graphinaexception)) or if writing to the file fails.
+///   is missing (with a [`GraphinaError`](../exceptions/index.html#GraphinaError)) or if writing to the file fails.
 ///
 /// # Example
 ///
@@ -341,7 +344,7 @@ where
         let src_attr = graph.node_attr(src).ok_or_else(|| {
             Error::new(
                 ErrorKind::InvalidData,
-                GraphinaException::new(&format!(
+                GraphinaError::parse_error(format!(
                     "Missing node attribute for source node: {:?}",
                     src
                 )),
@@ -350,7 +353,7 @@ where
         let tgt_attr = graph.node_attr(tgt).ok_or_else(|| {
             Error::new(
                 ErrorKind::InvalidData,
-                GraphinaException::new(&format!(
+                GraphinaError::parse_error(format!(
                     "Missing node attribute for target node: {:?}",
                     tgt
                 )),

@@ -21,7 +21,7 @@ variants are provided that return a `Result` and use the custom exception
 `graphina::core::exceptions::GraphinaNoPath` if no valid path exists.
 */
 
-use crate::core::exceptions::GraphinaNoPath;
+use crate::core::error::GraphinaError;
 use crate::core::types::{BaseGraph, GraphConstructor, NodeId};
 use std::collections::{HashMap, HashSet, VecDeque};
 
@@ -236,12 +236,12 @@ pub fn try_iddfs<A, W, Ty>(
     start: NodeId,
     target: NodeId,
     max_depth: usize,
-) -> Result<Vec<NodeId>, GraphinaNoPath>
+) -> Result<Vec<NodeId>, GraphinaError>
 where
     Ty: GraphConstructor<A, W>,
 {
     iddfs(graph, start, target, max_depth).ok_or_else(|| {
-        GraphinaNoPath::new("No path found using IDDFS within the given depth limit")
+        GraphinaError::no_path("No path found using IDDFS within the given depth limit")
     })
 }
 
@@ -457,12 +457,12 @@ pub fn try_bidirectional_search<A, W, Ty>(
     graph: &BaseGraph<A, W, Ty>,
     start: NodeId,
     target: NodeId,
-) -> Result<Vec<NodeId>, GraphinaNoPath>
+) -> Result<Vec<NodeId>, GraphinaError>
 where
     Ty: GraphConstructor<A, W>,
 {
     bidis(graph, start, target)
-        .ok_or_else(|| GraphinaNoPath::new("No path exists between the specified nodes"))
+        .ok_or_else(|| GraphinaError::no_path("No path exists between the specified nodes"))
 }
 
 /// Helper function to obtain backward neighbors for bidirectional search.

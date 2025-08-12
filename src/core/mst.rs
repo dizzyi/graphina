@@ -21,11 +21,11 @@ They use a union–find (disjoint-set) data structure with path compression and 
 
 ## Error Handling
 
-If the input graph is empty, algorithms will return a `Result` containing a `GraphinaException`.
+If the input graph is empty, algorithms will return a `Result` containing a `GraphinaError`.
 If other required conditions are violated, the algorithm may also signal an error via a `Result`.
 */
 
-use crate::core::exceptions::GraphinaException;
+use crate::core::error::GraphinaError;
 use crate::core::types::{BaseGraph, GraphConstructor, NodeId};
 use rayon::prelude::*;
 use std::cmp::Ordering;
@@ -107,7 +107,7 @@ pub struct MstEdge<W> {
 /// - A vector of MST edges (`MstEdge<W>`).
 /// - The total weight of the MST.
 ///
-/// Returns an `Err(GraphinaException)` if the input graph is empty.
+/// Returns an `Err(GraphinaError)` if the input graph is empty.
 ///
 /// # Example
 ///
@@ -125,13 +125,13 @@ pub struct MstEdge<W> {
 /// ```
 pub fn boruvka_mst<A, W, Ty>(
     graph: &BaseGraph<A, W, Ty>,
-) -> Result<(Vec<MstEdge<W>>, W), GraphinaException>
+) -> Result<(Vec<MstEdge<W>>, W), GraphinaError>
 where
     W: Copy + PartialOrd + Add<Output = W> + AddAssign + Sub<Output = W> + From<u8> + Send + Sync,
     Ty: GraphConstructor<A, W>,
 {
     if graph.node_count() == 0 {
-        return Err(GraphinaException::new(
+        return Err(GraphinaError::empty_graph(
             "Graph is empty, cannot compute MST.",
         ));
     }
@@ -207,7 +207,7 @@ where
 /// - A vector of MST edges (`MstEdge<W>`).
 /// - The total weight of the MST.
 ///
-/// Returns an `Err(GraphinaException)` if the input graph is empty.
+/// Returns an `Err(GraphinaError)` if the input graph is empty.
 ///
 /// # Example
 ///
@@ -225,13 +225,13 @@ where
 /// ```
 pub fn kruskal_mst<A, W, Ty>(
     graph: &BaseGraph<A, W, Ty>,
-) -> Result<(Vec<MstEdge<W>>, W), GraphinaException>
+) -> Result<(Vec<MstEdge<W>>, W), GraphinaError>
 where
     W: Copy + PartialOrd + Add<Output = W> + AddAssign + From<u8> + Ord,
     Ty: GraphConstructor<A, W>,
 {
     if graph.node_count() == 0 {
-        return Err(GraphinaException::new(
+        return Err(GraphinaError::empty_graph(
             "Graph is empty, cannot compute MST.",
         ));
     }
@@ -279,7 +279,7 @@ where
 /// - A vector of MST edges (`MstEdge<W>`).
 /// - The total weight of the MST.
 ///
-/// Returns an `Err(GraphinaException)` if the input graph is empty.
+/// Returns an `Err(GraphinaError)` if the input graph is empty.
 ///
 /// # Example
 ///
@@ -297,14 +297,14 @@ where
 /// ```
 pub fn prim_mst<A, W, Ty>(
     graph: &BaseGraph<A, W, Ty>,
-) -> Result<(Vec<MstEdge<W>>, W), GraphinaException>
+) -> Result<(Vec<MstEdge<W>>, W), GraphinaError>
 where
     W: Copy + PartialOrd + Add<Output = W> + AddAssign + From<u8> + Ord,
     Ty: GraphConstructor<A, W>,
     NodeId: Ord,
 {
     if graph.node_count() == 0 {
-        return Err(GraphinaException::new(
+        return Err(GraphinaError::empty_graph(
             "Graph is empty, cannot compute MST.",
         ));
     }
