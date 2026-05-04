@@ -2,134 +2,134 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://habedi.github.io/graphina/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/examples/approximation/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/examples/basic/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/examples/centrality/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/examples/community/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/examples/generators/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/examples/io/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/examples/links/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/examples/metrics/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/examples/mst/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/examples/parallel/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/examples/paths/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/examples/subgraphs/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/examples/traversal/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/examples/visualization/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/getting-started/concepts/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/getting-started/installation/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/getting-started/quickstart/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/approximation/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/builders/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/centrality/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/community/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/generators/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/graphs/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/io/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/links/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/metrics/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/mst/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/parallel/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/paths/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/subgraphs/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/traversal/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
     <url>
          <loc>https://habedi.github.io/graphina/guide/visualization/</loc>
-         <lastmod>2026-01-19</lastmod>
+         <lastmod>2026-05-04</lastmod>
     </url>
 </urlset>
